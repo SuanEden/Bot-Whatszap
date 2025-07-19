@@ -17,32 +17,39 @@ def responder(mensagem):
     return "Desculpe, não entendi. Pode reformular a pergunta?"
 
 def ler_mensagem():
-    pyautogui.moveTo(400, 700)  # Ajuste dependendo da resolução da tela
-    pyautogui.click()
-    pyautogui.hotkey('ctrl', 'c')
-    time.sleep(0.5)
-    mensagem = pyperclip.paste()
-    return mensagem
+    try:
+        # Posiciona o mouse para copiar a última mensagem
+        pyautogui.moveTo(400, 700, duration=0.5)
+        pyautogui.click()
+        time.sleep(0.5)
+        pyautogui.hotkey('ctrl', 'c')
+        time.sleep(0.5)
+        mensagem = pyperclip.paste()
+        return mensagem.strip()
+    except Exception as e:
+        print(f"[ERRO AO LER MENSAGEM] {e}")
+        return ""
 
 def enviar_resposta(texto):
-    pyautogui.typewrite(texto)
-    pyautogui.press("enter")
+    try:
+        pyautogui.typewrite(texto)
+        pyautogui.press("enter")
+    except Exception as e:
+        print(f"[ERRO AO ENVIAR RESPOSTA] {e}")
 
 print("BOT INICIADO. Posicione no WhatsApp Web!")
-
-time.sleep(5)  # Tempo para você abrir o WhatsApp Web
+time.sleep(10)  # Tempo extra para você ajustar a tela
 
 ultima_mensagem = ""
 
-while True:
-    try:
+try:
+    while True:
         mensagem = ler_mensagem()
-        if mensagem != ultima_mensagem:
+        if mensagem != "" and mensagem != ultima_mensagem:
             print("Mensagem recebida:", mensagem)
             resposta = responder(mensagem)
             enviar_resposta(resposta)
             ultima_mensagem = mensagem
         time.sleep(2)
-    except Exception as e:
-        print("Erro:", e)
-        time.sleep(2)
+except KeyboardInterrupt:
+    print("\n[BOT ENCERRADO PELO USUÁRIO]")
