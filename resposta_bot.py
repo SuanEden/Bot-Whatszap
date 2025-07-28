@@ -58,3 +58,4 @@ try:
         time.sleep(2)
 except KeyboardInterrupt:
     print("\n[BOT ENCERRADO PELO USUÁRIO]")
+### oi kebda
